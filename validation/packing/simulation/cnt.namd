@@ -1,0 +1,76 @@
+cellBasisVector1     51.05 0.0 0.0
+cellBasisVector2     0.0 51.579 0.0
+cellBasisVector3     0.0 0.0 50.0
+cellOrigin           0.0 0.0 0.0
+
+#wrapAll on
+coordinates         cnt_chains.pdb
+#bincoordinates  ./equilibration/cntequil.coor
+#binvelocities ./equilibration/cntequil.vel
+temperature          300
+#seed                 74269
+
+switching            on
+switchdist           10
+cutoff               12
+pairlistdist         13.5
+margin               0
+stepspercycle        20
+
+
+langevin on
+langevinTemp 300
+langevinDamping 2
+
+reassignFreq 10000
+reassignTemp 300
+
+PME                  off
+PMEGridSizeX         108
+PMEGridSizeY         108
+PMEGridSizeZ         80
+
+structure            cnt_chains.psf
+parameters           cnt_test.prm
+paraTypeCharmm      on
+exclude              scaled1-4
+1-4scaling           1.0
+
+timestep             1.0
+fullElectFrequency   4
+
+numsteps             10000000
+outputtiming         1000
+outputenergies       1000
+outputname       ./output/cntabf
+restartName      ./restart/cntabf
+restartFreq 10000
+
+fixedAtoms on
+fixedAtomsFile cnt_chains.pdb
+
+
+DCDfile ./output/cnt_abf.dcd
+DCDfreq 1000
+
+colvars on
+
+namespace eval momentCV {
+    set moment 20
+    set xbox [expr 51.05/2.]
+    set ybox [expr 51.579/2.]
+}
+
+source colvar.tcl
+
+colvarsConfig colvars_config_custom.tcl
+
+#colvarsInput ./restart/cntabf
+
+constraints on
+consexp 4
+consref cnt_chains_cons.pdb
+conskfile cnt_chains_cons.pdb
+conskcol y
+selectConstrZ on
+selectConstraints on

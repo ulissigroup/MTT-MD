@@ -1,0 +1,36 @@
+package require psfgen
+package require cionize
+package require topotools
+
+
+#Make SDS structures
+topology top_all27_prot_lipid.inp
+segment SDS {pdb structure.pdb}
+coordpdb structure.pdb SDS
+guesscoord
+delatom SDS 1 N
+delatom SDS 1 HT1
+delatom SDS 1 HT2
+delatom SDS 1 HT3
+delatom SDS 1 CA
+delatom SDS 1 HA
+delatom SDS 1 C
+delatom SDS 1 OT1
+delatom SDS 1 OT2
+
+writepdb sds2.pdb
+writepsf sds2.psf
+mol delete all
+
+
+#Add ions 
+mol new sds2.psf
+mol addfile sds2.pdb
+
+set charge [measure sumweights [atomselect top all] weight charge]
+set nsod [expr "-round($charge)"]
+::cionize::cionize -mol 0 -mg -np 4 -ions "{SOD $nsod 1}"
+
+#Ion pdb files will be created as cionize-ions_1-SOD.pdb
+
+

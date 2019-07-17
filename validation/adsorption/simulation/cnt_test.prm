@@ -1,0 +1,39 @@
+*>>>> CHARMM36 All-Hydrogen Parameter File for Proteins <<<<<<<<<<
+*>>>>> Includes phi, psi cross term map (CMAP) correction <<<<<<<<
+*>>>>>>>>>>>>>>>>>>>>>>>>>> Feb. 2012 <<<<<<<<<<<<<<<<<<<<<<<<<<<<
+* All comments to the CHARMM web site: www.charmm.org
+*             parameter set discussion forum
+*
+
+ATOMS
+!
+MASS  -1  CA        12.01100 ! aromatic C
+MASS  -1  C        12.01100 ! chain C
+MASS  -1  O         15.99900 ! carbonyl oxygen
+
+BONDS
+!
+CA   CA    305.000     1.3750 ! ALLOW   ARO
+C   O    305.000     1.3750 ! ALLOW   ARO
+C   C    305.000     1.3750 ! ALLOW   ARO
+
+
+NONBONDED nbxmod  5 atom cdiel fshift vatom vdistance vfswitch -
+cutnb 14.0 ctofnb 12.0 ctonnb 10.0 eps 1.0 e14fac 1.0 wmin 1.5
+                !adm jr., 2013 correction
+!
+!V(Lennard-Jones) = Eps,i,j[(Rmin,i,j/ri,j)**12 - 2(Rmin,i,j/ri,j)**6]
+!
+!epsilon: kcal/mole, Eps,i,j = sqrt(eps,i * eps,j)
+!Rmin/2: A, Rmin,i,j = Rmin/2,i + Rmin/2,j
+!
+!atom  ignored    epsilon      Rmin/2   ignored   eps,1-4       Rmin/2,1-4
+!
+!carbons
+C      0.000000  -0.10000     2.000000 ! ALLOW   PEP POL ARO
+                ! NMA pure solvent, adm jr., 3/3/93
+CA     0.000000  -1.0000     1.992400 ! ALLOW   ARO
+                ! benzene (JES)
+O      0.000000  -0.100     1.700000   ! ALLOW   PEP POL
+
+END

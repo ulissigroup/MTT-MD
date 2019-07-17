@@ -1,0 +1,76 @@
+
+proc calc_moment {args} {
+
+    upvar momentCV::moment moment
+    upvar momentCV::zbox zbox
+
+    set total 0.
+    #set totals [list ]
+    set args [lindex $args 0]
+
+    #puts $args
+    set l [llength $args]
+    set natoms [expr $l/3]
+    # puts $l
+    for {set i 2} {$i<$l} {incr i 3} {
+        set z [lindex $args $i]
+        set z [expr abs($z)]
+        set z [expr $z-2*($z-$zbox)*($z>$zbox)]
+        #set z [expr fmod($z+$zbox,2.*$zbox)]
+        #set z [expr $z+$zbox-2*$zbox*($z>0)]
+        #if {$z<0} {
+        #    set z [expr $z+$zbox]
+        #} { 
+        #    set z [expr $z-$zbox]
+        #}
+        set curval [expr $z/$zbox]
+        set total [expr $total + pow($curval,$moment)]
+        #lappend totals $curval
+    }
+    #set total [expr $natoms/$zbox/2*pow($total/$natoms,[expr -1./$moment])]
+    set frac [expr pow($total/$natoms, 1./$moment)]
+    if {$frac>1} {
+    puts $totals
+    puts $total
+    puts $frac
+    } { }
+    set total [expr $natoms/$zbox/2.*pow($total/$natoms,-1./$moment)]
+    return $total
+}
+
+proc calc_moment_gradient {args} {
+    upvar momentCV::moment moment
+    upvar momentCV::zbox zbox
+    set grad {}
+    set args [lindex $args 0]
+    set l [llength $args] 
+    set natoms [expr $l/3]
+
+    set total 0
+    for {set i 2} {$i<$l} {incr i 3} {
+        set z [lindex $args $i]
+        #set z [expr fmod($z+$zbox,2.*$zbox)]
+        
+        #if {$z<0} {
+        #    set z [expr $z+$zbox]
+        #} {
+        #    set z [expr $z-$zbox]
+        #}
+        #set z [expr $z+$zbox-2*$zbox*($z>0)]
+        #set z [expr fmod($z+$zbox,2*$zbox)-$zbox]
+        set z [expr abs($z)]
+        set z [expr $z-2*($z-$zbox)*($z>$zbox)]
+        set curval [expr $z/$zbox]
+        set total [expr {$total + pow($curval,$moment)}]
+    }
+
+    set total [expr -1./2.*pow($zbox,-1-$moment)*pow($total/$natoms,-1.-1./$moment)]
+    for {set i 0} {$i<$natoms} {incr i} {                                                        
+         lappend grad 0
+         lappend grad 0
+         set z [lindex $args [expr $i*3+2]]
+         set z [expr fmod($z+$zbox,2*$zbox)-$zbox]
+         lappend grad [expr $total*pow($z,[expr -1+$moment])] 
+    }
+    return [list $grad]
+}

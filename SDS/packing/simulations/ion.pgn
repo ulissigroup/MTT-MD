@@ -1,0 +1,25 @@
+package require topotools
+package require psfgen
+
+topology top_all27_prot_lipid.inp
+segment SDS {pdb cionize-ions_1-SOD.pdb}
+coordpdb cionize-ions_1-SOD.pdb SDS
+
+
+writepdb ion.pdb
+writepsf ion.psf
+
+
+mol delete all
+#Merge SDS and ion
+set ion [mol new ion.psf]
+mol addfile ion.pdb
+
+
+set sds [mol new sds2.psf]
+mol addfile sds2.pdb
+
+::TopoTools::mergemols [list $ion $sds]
+
+animate write psf SDS.psf
+animate write pdb SDS.pdb

@@ -1,0 +1,20 @@
+configuration {
+  step       999000
+  dt 2.000000e+00
+  version 2018-05-15
+}
+
+colvar {
+  name distZ
+  x  3.63310255253124e+00
+}
+
+restraint {
+  configuration {
+    step 999000
+    name Harmonic
+    stage           20
+    centers   2.00000000000000e+00
+  }
+}
+

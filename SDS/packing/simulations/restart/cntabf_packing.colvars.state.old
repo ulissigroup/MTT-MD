@@ -1,0 +1,20 @@
+configuration {
+  step     10499000
+  dt 2.000000e+00
+  version 2018-05-15
+}
+
+colvar {
+  name gyration
+  x  1.21668440023199e+01
+}
+
+restraint {
+  configuration {
+    step 10499000
+    name Harmonic
+    stage           35
+    centers   1.00000000000000e+01
+  }
+}
+

@@ -1,0 +1,33 @@
+colvarsTrajFrequency 1000
+colvarsRestartFrequency 1000
+smp on
+
+colvar {
+    name  particleZ
+   # width 1
+   # extendedLagrangian off
+   # extendedFluctuation 0.01
+	distanceZ {
+        main {
+                atomsFile SDS_graphene_wb.pdb
+                atomsCol B
+                atomsColValue 1
+        }
+        ref {
+               atomsFile SDS_graphene_wb.pdb
+                atomsCol B
+                atomsColValue 2
+        }
+
+}
+
+harmonic {
+    name Harmonic
+    colvars gyration
+    #centers 50
+    targetCenters 10
+    targetNumSteps 300000
+    outputCenters on
+    targetNumStages 34
+    forceConstant 20
+}

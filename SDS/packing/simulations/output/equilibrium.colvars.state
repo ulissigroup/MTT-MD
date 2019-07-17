@@ -1,0 +1,18 @@
+configuration {
+  step     10005000
+  dt 2.000000e+00
+  version 2018-05-15
+}
+
+colvar {
+  name gyration
+  x  4.99259818662291e+01
+}
+
+restraint {
+  configuration {
+    step 10005000
+    name Harmonic
+  }
+}
+

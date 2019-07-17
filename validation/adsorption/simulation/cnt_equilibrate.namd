@@ -1,0 +1,95 @@
+#settings for the size of the unit cell to use
+cellBasisVector1     51.05 0.0 0.0
+cellBasisVector2     0.0 51.579 0.0
+cellBasisVector3     0.0 0.0 20.0
+cellOrigin           0.0 0.0 0.0
+
+#wrap atomic coordinates back around if they go across the unit cell
+# this doesn't affect the results, but keeps everything in a box that
+#makes it easier to see
+wrapAll on
+
+#Get initial coordinates for each atom from the PDB file
+coordinates          cnt_chains.pdb
+
+#initial temperature, used to set random velocities initially
+# we keep this low so at first it doesn't explode
+temperature          1
+
+
+#seed                 74269
+
+
+
+#force-field numerical settings
+switching            on
+switchdist           10
+cutoff               12
+pairlistdist         13.5
+margin               0
+stepspercycle        20
+
+
+#Thermostat settings
+langevin on
+langevinTemp 30
+langevinDamping 0.5
+
+#Every 5000 steps, the temperature will be forced back to 30
+# by reassining all of the velocities in the system
+reassignFreq 5000
+reassignTemp 30
+
+#Settings for PME, which is used to calculate the interatomic
+# electrostatics, currently off
+PME                  off
+PMEGridSizeX         108
+PMEGridSizeY         108
+PMEGridSizeZ         80
+
+#Set the simulation structure from the psf file
+structure            cnt_chains.psf
+
+#force field parameters to use
+parameters           cnt_test.prm
+paraTypeCharmm      on
+
+#force-field settings
+exclude              scaled1-4
+1-4scaling           1.0
+
+#numerical info
+timestep             1.0
+fullElectFrequency   4
+
+#number of steps to run for
+numsteps             100000
+
+#How frequently to output results to the command line
+outputtiming         1000
+outputenergies       1000
+outputname           ./equilibration/cntequil
+
+#Select which atoms should be held fixed (by default
+# based on occupancy column in the pdb file
+fixedAtoms on
+fixedAtomsFile cnt_chains.pdb
+
+#Settings for how frequently to save snapshots
+# from the simulation to the dcd file
+DCDfile ./equilibration/cntequil.dcd
+DCDfreq 1000
+
+
+#Everything below here is not being used because colvars are off
+colvars off
+
+namespace eval momentCV {
+    set moment 20
+    set zbox [expr 51.5/2.]
+}
+
+source colvar.tcl
+
+colvarsConfig colvars_config_custom.tcl
+
